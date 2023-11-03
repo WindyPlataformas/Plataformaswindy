@@ -47,11 +47,32 @@ public class Player : MonoBehaviour
         movHor = Input.GetAxisRaw("Horizontal");
         isMoving = (movHor != 0f);
         isGrounded = Physics2D.CircleCast(transform.position, radius, Vector3.down, groundRayDist, groundLayer);
+        if (Input.GetKeyDown(KeyCode.Space))
+            jump();
+        flip(movHor);
+    }
+
+    public void jump()
+    {
+        if (!isGrounded) return;
+        rb.velocity = Vector2.up * jumpForce;
     }
 
     void FixedUpdate()
     {
         rb.velocity = new Vector2(movHor * speed, rb.velocity.y);
+    }
+
+    private void flip(float _xValue)
+    {
+        Vector3 theScale = transform.localScale;
+
+        if(_xValue < 0)
+            theScale.x = Mathf.Abs(theScale.x) * -1;
+        else
+            if(_xValue > 0)
+                theScale.x = Mathf.Abs(theScale.x);
+        transform.localScale = theScale;
     }
 
     void OnDestroy()
